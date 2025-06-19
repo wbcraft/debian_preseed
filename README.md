@@ -18,7 +18,7 @@ For everything under B.4.7, everything should be good other than grub.  You'll n
 2. Save this file and make it executable:  chmod 755 create_usb.sh
 3. It will install the genisoimage and syslinux-utils packages for later in the script
 4. It also makes a /storage directory and chmod's it.  You can change this to whatever you wish, but you may need to modify things elsewhere
-5. Make sure you have whichever Debian iso downloaded.  Modify line 10 to include the name of that iso.
+5. Make sure you have whichever Debian iso downloaded.  Modify lines 7 and 10 to include the name of that iso.
 6. On line 32 you'll need to specify the USB thumbdrive you wish to use.  I recommend the command `lsblk` to figure that out.
 7. Once done, pop the usb into the computer you want to build, go to advanced installation, and do the automatic install.
 
