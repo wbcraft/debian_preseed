@@ -11,6 +11,8 @@
 
 For everything under B.4.7, everything should be good other than grub.  You'll need to specify the device you used in B.4.7 for the grub-install.  After that, you should select your base GUI software in the tasksel section, if you need it.
 
+Feel free to modify the file system sizes as you see fit, but backup the file first.  If you're modifying the LVM layout, remember to end on a period.
+
 
 ### Create the USB thumbdrive
 
