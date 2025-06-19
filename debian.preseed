@@ -6,6 +6,7 @@
 ### May 21 2025
 1. Moved /home to the bottom of the LV list.  In preseed, the last file system listed will get any/all remaining space.
 2. Removed old, commented entries to clean up things.  Changed the old /dump.ext entry to /dump
+## NOTE THAT YOU CANNOT USE A PERIOD IN YOUR FILESYSTEM NAME.  To the debian installer, that means end of section!
 
 
 ### START HERE ###
