@@ -4,7 +4,7 @@
 # genisoimage syslinux-utils
 apt-get install genisoimage syslinux-utils
 mkdir /storage && chmod 777 /storage
-cp debian-12.9.0-amd64-DVD-1.iso /storage
+cp debian-12.9.0-amd64-DVD-1.iso debian.preseed /storage
 cd /storage
 
 # Add preseed file to initrd
