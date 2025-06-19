@@ -1,0 +1,181 @@
+########## REVISION NOTES ##########
+### May 16 2025 preseed.cfg
+1. This config created all logical volumes within the VG.  /var had too much space so I'm editing /home and /var sizes for testing.  Also added the raid space for /dump.ext to see if that works and keeps the LVM partition size lower.
+2. Changed sizes for /home and /var.  A build using this showed /var using 4GB now.  Success!
+
+### May 21 2025
+1. Moved /home to the bottom of the LV list.  In preseed, the last file system listed will get any/all remaining space.
+2. Removed old, commented entries to clean up things.  Changed the old /dump.ext entry to /dump
+
+
+### START HERE ###
+### B.4.1. Localization
+# This sets the country, language, locale, and keyboard layout.
+d-i debian-installer/language string en
+d-i debian-installer/country string US
+d-i debian-installer/locale string en_US.UTF-8
+d-i keyboard-configuration/xkb-keymap select us
+d-i keyboard-configuration/layout select US
+d-i keyboard-configuration/variant select English (US)
+d-i localechooser/countrylist/North_America select United States
+
+### B.4.2. Network configuration
+### Disabling network during testing/base install.  This will be setup via script/ansible 
+### Edit May 21 2025: I'll need to setup a private network at a later time in order for ansible to push everything.
+d-i netcfg/enable boolean false
+d-i netcfg/choose_interface select none
+d-i netcfg/disable_autoconfig boolean true
+d-i netcfg/get_hostname string yourhostname
+d-i netcfg/get_domain string local
+d-i netcfg/wireless_wep string
+
+
+### B.4.3. Network console
+### Maybe for later...
+
+### B.4.4. Mirror settings For updates..
+d-i mirror/protocol string http
+d-i mirror/country string manual
+d-i mirror/http/hostname string http.us.debian.org
+d-i mirror/http/directory string /debian
+d-i mirror/http/proxy string
+d-i mirror/suite string bookworm
+
+### B.4.5. Account setup for the base accounts:  root and your user
+d-i passwd/root-login boolean true
+d-i passwd/root-password-again password debian
+d-i passwd/root-password password debian
+d-i passwd/make-user boolean true
+d-i passwd/user-fullname string newuser
+d-i passwd/username string newuser
+d-i passwd/user-password password debian
+d-i passwd/user-password-again password debian
+d-i passwd/user-uid string 1000
+d-i passwd/user-default-groups string audio cdrom video sudo plugdev netdev
+
+
+### B.4.6. Clock and time zone setup
+
+d-i clock-setup/utc boolean true
+d-i time/zone string US/Central
+d-i clock-setup/ntp boolean true
+d-i clock-setup/ntp-server string debian.pool.ntp.org
+
+### B.4.7. Partitioning
+### Please do not mess with this unless you're willing to do YOUR OWN testing. Disk Configuration:
+d-i     partman-auto/disk string /dev/sda /dev/sdb
+d-i     partman-auto/method string raid
+d-i     partman-lvm/device_remove_lvm boolean true
+d-i     partman-md/device_remove_md boolean true
+d-i     partman-lvm/confirm boolean true
+d-i     partman-auto/choose_recipe select boot-root
+d-i     partman-auto-lvm/guided_size string max 
+d-i     partman-auto-lvm/new_vg_name string vg
+
+### This is where it gets funky. Do not use any periods in your filesystem names!!!
+d-i partman-auto-raid/recipe string \
+    1 2 0 ext4 /boot /dev/sda1#/dev/sdb1 \
+    . \
+    1 2 0 lvm - /dev/sda2#/dev/sdb2 \
+    . \
+    0 2 0 xfs /dump /dev/sda3#/dev/sdb3 \
+    .
+
+### Please, for the love of everything holy, leave this alone.
+d-i     partman-auto/expert_recipe string \
+           boot-root :: \
+             1024 30 1024 raid \
+                $lvmignore{ } $primary{ } \
+		$bootable{ } method{ raid } \
+                raidid{ 0 } \
+		. \
+             250000 3500 266000 raid \
+                $lvmignore{ } \
+                $primary{ } method{ raid } \
+                raidid{ 1 } \
+		. \
+             100000 3000000 100% raid \
+                $lvmignore{ } \
+                $primary{ } method{ raid } \
+                raidid{ 2} \
+                . \
+             30000 35 30000 ext4 \
+                $defaultignore{ } \
+                $lvmok{ } \
+                lv_name{ root } \
+                method{ format } \
+                format{ } \
+                use_filesystem{ } \
+                filesystem{ ext4 } \
+                mountpoint{ / } \
+                . \
+             4096 40 4096 linux-swap \
+		$defaultignore{ } \
+		$lvmok{ } \
+		method{ swap }\
+		format{ } \
+		. \
+	     4096 41 4096 ext4 \
+		$defaultignore{ } \
+		$lvmok{ } \
+		lv_name{ tmp } \
+		method{ format } \
+		format{ } \
+		use_filesystem{ } \
+		filesystem{ ext4 } \
+		mountpoint{ /tmp } \
+		. \
+	     4096 41 8192 ext4 \
+		$defaultignore{ } \
+		$lvmok{ } \
+		lv_name{ var } \
+		method{ format } \
+		format{ } \
+		use_filesystem{ } \
+		filesystem{ ext4 } \
+		mountpoint{ /var } \
+		. \
+             200000 500 100% ext4 \
+                $defaultignore{ } \
+                $lvmok{ } \
+                lv_name{ home } \
+                method{ format } \
+                format{ } \
+                use_filesystem{ } \
+                filesystem{ ext4 } \
+                mountpoint{ /home } \
+                .
+d-i     mdadm/boot_degraded boolean false
+d-i     partman-md/confirm boolean true
+d-i     partman-partitioning/confirm_write_new_label boolean true
+d-i     partman-basicfilesystems/no_swap boolean false
+d-i     partman/choose_partition select Finish partitioning and write changes to disk
+d-i     partman/confirm boolean true
+d-i     partman-md/confirm_nooverwrite  boolean true
+d-i     partman/confirm_nooverwrite boolean true
+
+### Final partitioning steps
+d-i partman/mount_style select uuid
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+
+### Base system install
+d-i base-installer/kernel/image string linux-image-amd64
+
+### APT setup - We will add the sources via script or ansible
+d-i apt-setup/non-free boolean true
+d-i apt-setup/contrib boolean true
+d-i apt-setup/non-free-firmware boolean true
+d-i apt-setup/disable-cdrom-entries boolean true
+
+### Software selection - Let's make sure we get the necessary OS software.
+tasksel tasksel/first multiselect standard, ssh-server, xfce-desktop 
+
+### GRUB bootloader (legacy BIOS mode) - Do not touch.
+d-i grub-installer/only_debian boolean true
+d-i grub-installer/bootdev string /dev/sda
+
+### Final steps
+d-i finish-install/reboot_in_progress note
+d-i cdrom-detect/eject boolean true
