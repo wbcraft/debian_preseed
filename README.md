@@ -3,7 +3,7 @@
 1. Section B.4.1 - Modify this for your locale.
 2. Section B.4.2 - If you want to enable network configuration, start here.
 3. Section B.4.3 - Put in your IP, subnet, etc., here.
-4. Sectopm B.4.4 - Setup your mirrors here.
+4. Sectiom B.4.4 - Setup your mirrors here.
 5. Section B.4.5 - Set your root password and new user/password here.
 6. Section B.4.6 - Set your timezone info here.
 7. Section B.4.7 - Be sure to create a backup of this file before messing with this section.  This is where things get complicated.  Specify your drive(s) here.
