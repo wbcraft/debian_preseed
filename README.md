@@ -19,10 +19,10 @@ I will not be doing a GPT version.
 ### Create the USB thumbdrive
 
 1. I believe it's required to run this as root. 
-2. Save this file and make it executable:  chmod 755 create_usb.sh
-3. Run `./create_usb.sh`
+2. Save this file and make it executable:  chmod 755 create_iso.sh
+3. Run `./create_iso.sh`
 4. It will install the genisoimage and syslinux-utils packages for later in the script
-5. It also makes a /storage directory and chmod's it.  You can change this to whatever you wish, but you may need to modify things elsewhere
+5. It also makes a /storage directory and chmod's it.  You can change this to whatever you wish, but you may need to modify things elsewhere.
 6. Make sure you have whichever Debian iso downloaded.  Modify lines 7 and 10 to include the name of that iso.  This assumes you've kept the debian.preseed and iso files in the same directory (for the copy to /storage).
 7. On line 32 you'll need to specify the USB thumbdrive you wish to use.  I recommend the command `lsblk` to figure that out.
 8. Once done, pop the usb into the computer you want to build, go to advanced installation, and do the automatic install.
