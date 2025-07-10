@@ -1,5 +1,6 @@
 ### These are two files to help create a new Debian Bookworm preseed file and write it to a USB thumbdrive for installation.  This is tested using legacy BIOS and not GPT drives because ...reasons.
 
+### debian.preseed
 1. Section B.4.1 - Modify this for your locale.
 2. Section B.4.2 - If you want to enable network configuration, start here.
 3. Section B.4.3 - Put in your IP, subnet, etc., here.
@@ -16,9 +17,9 @@ Feel free to modify the file system sizes as you see fit, but backup the file fi
 I will not be doing a GPT version.
 
 
-### Create the USB thumbdrive
+### Create the USB thumbdrive - create_iso.sh
 
-1. I believe it's required to run this as root. 
+1. I believe it's required to run this as root.. maybe not. 
 2. Save this file and make it executable:  chmod 755 create_iso.sh
 3. Run `./create_iso.sh`
 4. It will install the genisoimage and syslinux-utils packages for later in the script
