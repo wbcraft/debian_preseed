@@ -1,4 +1,4 @@
-### These are two files to help create a new Debian Bookworm preseed file and write it to a USB thumbdrive for installation.  This is tested using legacy BIOS and not GPT drives for ...reasons.
+### These are two files to help create a new Debian Bookworm preseed file and write it to a USB thumbdrive for installation.  This is tested using legacy BIOS and not GPT drives because ...reasons.
 
 1. Section B.4.1 - Modify this for your locale.
 2. Section B.4.2 - If you want to enable network configuration, start here.
