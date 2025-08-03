@@ -19,7 +19,7 @@ I will not be doing a GPT version.
 
 ### Create the USB thumbdrive - create_iso.sh
 
-1. I believe it's required to run this as root.. maybe not. 
+1. I believe it's required to run this as root.. maybe not. It depends on where you want to put everything.
 2. Save this file and make it executable:  chmod 755 create_iso.sh
 3. Run `./create_iso.sh`
 4. It will install the genisoimage and syslinux-utils packages for later in the script
